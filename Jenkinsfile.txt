@@ -1,29 +1,36 @@
 pipeline{
-    agent any
+    agent {
+        docker {
+            image 'node:18.17.1-alpine3.18'
+        }
+    }
 
+    environment {
+    FIREBASE_DEPLOY_TOKEN = credentials('firebase-token')
+    }
 
     stages{
         stage('Building'){
             steps{
-            sh 'echo Building'
+            sh 'npm install -g firebase-tools'
             }
         } 
 
          stage('Testing'){
             steps{
-            sh 'echo Building'
+             sh 'firebase deploy -P lab12-testing --token "$FIREBASE_DEPLOY_TOKEN"'
             }
         }
 
         stage('Staging'){
             steps{
-            sh 'echo Building'
+            sh 'firebase deploy -P lab12-staging --token "$FIREBASE_DEPLOY_TOKEN"'
             }
         }
 
         stage('Production'){
             steps{
-            sh 'echo Building'
+            sh 'firebase deploy -P lab12-production --token "$FIREBASE_DEPLOY_TOKEN"'
             }
         }
     }
